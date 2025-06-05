@@ -1,0 +1,6 @@
+{
+	"phpunit.phpunit": "./vendor/bin/phpunit",
+	"php.version": "v8.1",
+	"phpstan.binPath": "./vendor/bin/phpstan",
+	"phpstan.configFile": "phpstan.neon.dist"
+}

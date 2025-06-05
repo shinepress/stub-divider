@@ -1,0 +1,39 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Composer: Install Dependencies",
+			"type": "composer",
+			"command": "install"
+		},
+		{
+			"label": "Composer: Update Dependencies",
+			"type": "composer",
+			"command": "update"
+		},
+		{
+			"label": "Script: Static Analysis",
+			"type": "composer",
+			"command": "run-script",
+			"args": [
+				"analyze:static"
+			]
+		},
+		{
+			"label": "Script: Syntax Check",
+			"type": "composer",
+			"command": "run-script",
+			"args": [
+				"syntax:check"
+			]
+		},
+		{
+			"label": "Script: Syntax Fix",
+			"type": "composer",
+			"command": "run-script",
+			"args": [
+				"syntax:fix"
+			]
+		}
+	]
+}
