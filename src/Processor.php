@@ -1,8 +1,18 @@
 <?php
 
+/*
+ * This file is part of ShinePress.
+ *
+ * (c) Shine United LLC
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
 namespace ShinePress\StubDivider;
 
-use Generator;
 use PhpParser\Node\FunctionLike;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
@@ -17,10 +27,8 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\SplFileInfo;
 
 class Processor {
-
 	/** @var SplObjectStorage<ClassLike, string|null> */
 	private SplObjectStorage $classes;
-
 
 	/** @var SplObjectStorage<FunctionLike, string|null> */
 	private SplObjectStorage $functions;
@@ -37,43 +45,15 @@ class Processor {
 
 		$statements = $parser->parse($stubfile->getContents());
 
-		if(is_array($statements)) {
-			foreach($statements as $statement) {
+		if (is_array($statements)) {
+			foreach ($statements as $statement) {
 				$this->processStatement($statement);
 			}
 		}
 	}
 
-	private function processStatement(Stmt $statement, ?string $namespace = null): void {
-		if($statement instanceof Namespace_) {
-			$namespace = null;
-			if($statement->name instanceof Name) {
-				$namespace = $statement->name->name;
-			}
-
-			foreach($statement->stmts as $substatement) {
-				$this->processStatement($substatement, $namespace);
-			}
-
-			return;
-		}
-
-		if($statement instanceof ClassLike) {
-			$this->addClass($statement, $namespace);
-
-			return;
-		}
-
-		if($statement instanceof FunctionLike) {
-			$this->addFunction($statement, $namespace);
-
-			return;
-		}
-	}
-
 	public function addClass(ClassLike $class, ?string $namespace = null): void {
 		$this->classes[$class] = $namespace;
-
 	}
 
 	public function addFunction(FunctionLike $function, ?string $namespace = null): void {
@@ -89,23 +69,24 @@ class Processor {
 	}
 
 	/**
-	 * @throws RuntimeException
 	 * @return iterable<ResultFile>
+	 *
+	 * @throws RuntimeException
 	 */
 	public function process(string $outputBasepath): iterable {
 		$printer = new Standard();
 
 		$classmap = [];
-		foreach($this->classes as $class) {
+		foreach ($this->classes as $class) {
 			$namespace = $this->classes[$class];
 
-			if(!$class->name instanceof Identifier) {
+			if (!$class->name instanceof Identifier) {
 				throw new RuntimeException('missing class name ' . $class->getLine());
 			}
 
 			$classFullname = $class->name->name;
 			$classFilepath = $classFullname . '.php';
-			if(!is_null($namespace)) {
+			if (!is_null($namespace)) {
 				$classFullname = $namespace . '\\' . $classFullname;
 				$classFilepath = str_replace('\\', '/', $namespace) . '/' . $classFilepath;
 			}
@@ -118,7 +99,7 @@ class Processor {
 			$classData = [];
 			$classData[] = '<?php';
 			$classData[] = '';
-			if(!is_null($namespace)) {
+			if (!is_null($namespace)) {
 				$classData[] = 'namespace ' . $namespace . ';';
 			}
 			$classData[] = '';
@@ -132,16 +113,16 @@ class Processor {
 		ksort($classmap);
 
 		$functionmap = [];
-		foreach($this->functions as $function) {
+		foreach ($this->functions as $function) {
 			$namespace = $this->functions[$function];
 
-			if(!isset($function->name) || !$function->name instanceof Identifier) {
+			if (!isset($function->name) || !$function->name instanceof Identifier) {
 				throw new RuntimeException('missing function name ' . $function->getLine());
 			}
 
 			$functionFullname = $function->name->name;
 			$functionFilepath = $functionFullname . '.php';
-			if(!is_null($namespace)) {
+			if (!is_null($namespace)) {
 				$functionFullname = $namespace . '\\' . $functionFullname;
 				$functionFilepath = str_replace('\\', '/', $namespace) . '/' . $functionFilepath;
 			}
@@ -153,7 +134,7 @@ class Processor {
 			$functionData = [];
 			$functionData[] = '<?php';
 			$functionData[] = '';
-			if(!is_null($namespace)) {
+			if (!is_null($namespace)) {
 				$functionData[] = 'namespace ' . $namespace . ';';
 			}
 			$functionData[] = '';
@@ -166,7 +147,6 @@ class Processor {
 		}
 		ksort($functionmap);
 
-
 		$autoloaderData = [];
 
 		$autoloaderData[] = '<?php';
@@ -175,7 +155,7 @@ class Processor {
 		$autoloaderData[] = "\t" . '$classname = strtolower($classname);';
 		$autoloaderData[] = '';
 		$autoloaderData[] = "\t" . '$classmap = [];';
-		foreach($classmap as $classname => $classpath) {
+		foreach ($classmap as $classname => $classpath) {
 			$autoloaderData[] = "\t" . '$classmap[\'' . $classname . '\'] = __DIR__ . \'/' . $classpath . '\';';
 		}
 		$autoloaderData[] = '';
@@ -184,7 +164,7 @@ class Processor {
 		$autoloaderData[] = "\t" . '}';
 		$autoloaderData[] = '});';
 		$autoloaderData[] = '';
-		foreach($functionmap as $functionname => $functionpath) {
+		foreach ($functionmap as $functionname => $functionpath) {
 			$autoloaderData[] = 'require __DIR__ . \'/' . $functionpath . '\'; // ' . $functionname;
 		}
 
@@ -194,5 +174,32 @@ class Processor {
 			$autoloaderPath,
 			implode("\n", $autoloaderData),
 		);
+	}
+
+	private function processStatement(Stmt $statement, ?string $namespace = null): void {
+		if ($statement instanceof Namespace_) {
+			$namespace = null;
+			if ($statement->name instanceof Name) {
+				$namespace = $statement->name->name;
+			}
+
+			foreach ($statement->stmts as $substatement) {
+				$this->processStatement($substatement, $namespace);
+			}
+
+			return;
+		}
+
+		if ($statement instanceof ClassLike) {
+			$this->addClass($statement, $namespace);
+
+			return;
+		}
+
+		if ($statement instanceof FunctionLike) {
+			$this->addFunction($statement, $namespace);
+
+			return;
+		}
 	}
 }
