@@ -9,9 +9,9 @@
 	],
 	"require": {
 		"nikic/php-parser": "^5.5",
-		"symfony/console": "^7.3",
-		"symfony/filesystem": "^7.3",
-		"symfony/finder": "^7.3"
+		"symfony/console": "^6.1",
+		"symfony/filesystem": "^6.1",
+		"symfony/finder": "^6.1"
 	},
 	"bin": [
 		"bin/divide-stubs"
