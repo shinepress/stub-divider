@@ -1,0 +1,18 @@
+#!/usr/bin/env php
+<?php
+
+$autoloadPaths = [
+	__DIR__ . '/../../../autoload.php',
+	__DIR__ . '/../vendor/autoload.php',
+];
+use ShinePress\StubDivider\Application;
+
+foreach($autoloadPaths as $autoloadPath) {
+	if(file_exists($autoloadPath)) {
+		require_once $autoloadPath;
+		break;
+	}
+}
+
+$application = new Application();
+$application->run();

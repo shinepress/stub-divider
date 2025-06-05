@@ -1,0 +1,16 @@
+parameters:
+	level: 9
+	paths:
+		- src
+	treatPhpDocTypesAsCertain: false
+	exceptions:
+		check:
+			missingCheckedExceptionInThrows: true
+			tooWideThrowType: true
+		checkedExceptionClasses:
+			- 'RuntimeException'
+		uncheckedExceptionClasses:
+			- 'LogicException'
+		uncheckedExceptionRegexes:
+			- '#^PHPUnit\\#'
+		implicitThrows: false
