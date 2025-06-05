@@ -33,5 +33,5 @@ Then register the autoloader as a bootstrap file in your phpstan config:
 ```yaml
 parameters:
     bootstrapFiles:
-	    - ./my-stubfile/autoload.php
+        - ./my-stubfile/autoload.php
 ```
