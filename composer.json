@@ -8,6 +8,7 @@
 		"stub"
 	],
 	"require": {
+		"php": ">=8.1",
 		"nikic/php-parser": "^5.5",
 		"symfony/console": "^6.1",
 		"symfony/filesystem": "^6.1",
