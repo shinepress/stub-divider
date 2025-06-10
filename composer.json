@@ -14,6 +14,12 @@
 		"symfony/filesystem": "^6.1",
 		"symfony/finder": "^6.1"
 	},
+	"require-dev": {
+		"shinepress/coding-standard": "dev-main",
+		"php-cs-fixer/shim": "^3.75",
+		"phpstan/phpstan": "^2.1",
+		"phpstan/phpstan-strict-rules": "^2.0"
+	},
 	"bin": [
 		"bin/divide-stubs"
 	],
@@ -33,11 +39,5 @@
 		"analyze:static": "Perform static analysis (phpstan).",
 		"syntax:check": "Check syntax against coding standard (php-cs-fixer).",
 		"syntax:fix": "Fix syntax to conform with coding standard (php-cs-fixer)."
-	},
-	"require-dev": {
-		"shinepress/coding-standard": "dev-main",
-		"php-cs-fixer/shim": "^3.75",
-		"phpstan/phpstan": "^2.1",
-		"phpstan/phpstan-strict-rules": "^2.0"
 	}
 }

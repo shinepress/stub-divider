@@ -151,13 +151,13 @@ class Processor {
 
 		$autoloaderData[] = '<?php';
 		$autoloaderData[] = '';
-		$autoloaderData[] = 'spl_autoload_register(function(string $classname): void {';
-		$autoloaderData[] = "\t" . '$classname = strtolower($classname);';
-		$autoloaderData[] = '';
-		$autoloaderData[] = "\t" . '$classmap = [];';
+		$autoloaderData[] = '$classmap = [];';
 		foreach ($classmap as $classname => $classpath) {
-			$autoloaderData[] = "\t" . '$classmap[\'' . $classname . '\'] = __DIR__ . \'/' . $classpath . '\';';
+			$autoloaderData[] = '$classmap[\'' . $classname . '\'] = __DIR__ . \'/' . $classpath . '\';';
 		}
+		$autoloaderData[] = '';
+		$autoloaderData[] = 'spl_autoload_register(function(string $classname) use ($classmap): void {';
+		$autoloaderData[] = "\t" . '$classname = strtolower($classname);';
 		$autoloaderData[] = '';
 		$autoloaderData[] = "\t" . 'if(isset($classmap[$classname])) {';
 		$autoloaderData[] = "\t\t" . 'require_once $classmap[$classname];';
